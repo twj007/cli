@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: alibaba-nacos-discovery-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.100.206.158:8081
+server:
+  port: 8001
+
+
+
