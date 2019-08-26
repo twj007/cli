@@ -18,6 +18,8 @@
         <module>nacos</module>
         <module>consumer</module>
         <module>config</module>
+        <module>api</module>
+        <module>sentinel</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

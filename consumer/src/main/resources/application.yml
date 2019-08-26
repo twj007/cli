@@ -1,9 +1,47 @@
 spring:
   application:
     name: alibaba-nacos-discovery-client
+  main:
+    # Spring Boot 2.1 需要设定
+    allow-bean-definition-overriding: true
   cloud:
     nacos:
       discovery:
         server-addr: 47.100.206.158:8081
+    sentinel:
+        transport:
+          dashboard: 127.0.0.1:8080
+          client-ip: 127.0.0.1
+          port: 8721
+#        datasource:
+#          ds1:
+#            file:
+#              file: classpath:dagraderule.json
+#              type: json
+#              ruleType: flow
+#          ds2:
+#            nacos:
+#              server-addr: 47.100.206.158:8001
+#              dataId: ${spring.application.name}-sentinel
+#              groupId: DEFAULT_GROUP
+#              data-type: json
+#              rule-type: flow
+#      spring.cloud.sentinel.datasource.ds2.nacos.server-addr=localhost:8848
+#      spring.cloud.sentinel.datasource.ds2.nacos.dataId=sentinel
+#      spring.cloud.sentinel.datasource.ds2.nacos.groupId=DEFAULT_GROUP
+#      spring.cloud.sentinel.datasource.ds2.nacos.data-type=json
+
+#spring.cloud.sentinel.datasource.ds1.file.file=classpath: degraderule.json
+#spring.cloud.sentinel.datasource.ds1.file.data-type=json
+
 server:
   port: 8002
+
+# dubbo 配置
+dubbo:
+  registry:
+    address: spring-cloud://localhost
+  cloud:
+    subscribed-services: alibaba-nacos-discovery-server
+  metadata-report:
+    address: 127.0.0.1
