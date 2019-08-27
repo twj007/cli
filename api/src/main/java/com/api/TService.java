@@ -1,4 +1,4 @@
-package com.nacos.demo.service;
+package com.api;
 
 /***
  **@project: cli
@@ -6,7 +6,7 @@ package com.nacos.demo.service;
  **@Author: twj
  **@Date: 2019/08/26
  **/
-public interface ITestService {
+public interface TService {
 
     String test();
 }

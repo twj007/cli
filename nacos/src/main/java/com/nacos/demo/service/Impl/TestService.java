@@ -1,6 +1,6 @@
 package com.nacos.demo.service.Impl;
 
-import com.nacos.demo.service.ITestService;
+import com.api.TService;
 import org.apache.dubbo.config.annotation.Service;
 
 /***
@@ -10,8 +10,8 @@ import org.apache.dubbo.config.annotation.Service;
  **@Date: 2019/08/26
  **/
 
-@Service(interfaceClass = ITestService.class)
-public class TestService implements ITestService {
+@Service(interfaceClass = TService.class)
+public class TestService implements TService {
     @Override
     public String test() {
         return "ok";
