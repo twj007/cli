@@ -13,12 +13,12 @@ spring:
           dashboard: 127.0.0.1:8080
           client-ip: 127.0.0.1
           port: 8721
-#        datasource:
-#          ds1:
-#            file:
-#              file: classpath:dagraderule.json
-#              type: json
-#              ruleType: flow
+        datasource:
+          ds1:
+            file:
+              file: classpath:dagraderule.json
+              type: json
+              ruleType: flow
 #          ds2:
 #            nacos:
 #              server-addr: 47.100.206.158:8001
@@ -41,7 +41,8 @@ server:
 dubbo:
   registry:
     address: spring-cloud://localhost
+  protocol:
+    name: dubbo
+    port: -1
   cloud:
     subscribed-services: alibaba-nacos-discovery-server
-  metadata-report:
-    address: 127.0.0.1

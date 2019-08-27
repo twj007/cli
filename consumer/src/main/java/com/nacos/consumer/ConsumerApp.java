@@ -1,6 +1,7 @@
 package com.nacos.consumer;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.annotation.aspectj.SentinelResourceAspect;
 import com.nacos.demo.service.ITestService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Reference;
@@ -40,6 +41,10 @@ public class ConsumerApp {
 //        return new RestTemplate();
 //    }
 
+    @Bean
+    public SentinelResourceAspect sentinelResourceAspect() {
+        return new SentinelResourceAspect();
+    }
 
     @Slf4j
     @RestController
@@ -51,8 +56,8 @@ public class ConsumerApp {
 //        @Autowired
 //        RestTemplate restTemplate;
 
-        @Autowired
-        Client client;
+//        @Autowired
+//        Client client;
 
         @Reference(lazy = true, check = false)
         ITestService testService;
@@ -73,22 +78,23 @@ public class ConsumerApp {
 //            return "Return : " + result;
 //        }
 
-        @GetMapping("/test3")
-        public String test3(){
-            return client.hello("didi");
-        }
+//        @GetMapping("/test3")
+//        public String test3(){
+//            return client.hello("didi");
+//        }
 
         @GetMapping("/test4")
+        @SentinelResource("test")
         public String test4(){
             return testService.test();
         }
     }
 
-    @FeignClient("alibaba-nacos-discovery-server")
-    interface Client {
-
-        @GetMapping("/hello")
-        String hello(@RequestParam(name = "name") String name);
-
-    }
+//    @FeignClient("alibaba-nacos-discovery-server")
+//    interface Client {
+//
+//        @GetMapping("/hello")
+//        String hello(@RequestParam(name = "name") String name);
+//
+//    }
 }
