@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.backend.component.DynamicDatasource;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInterceptor;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -106,8 +107,12 @@ public class JdbcConfig {
     @Bean("sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDatasource")DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*.xml"));
-        bean.setTypeAliasesPackage("com.backend.pojo");
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/*/*.xml"));
+        bean.setTypeAliasesPackage("com.common.pojo");
+        org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
+        configuration.setLogImpl(StdOutImpl.class);
+        configuration.setMapUnderscoreToCamelCase(true);
+        bean.setConfiguration(configuration);
         bean.setPlugins(new Interceptor[]{new PageInterceptor()});
         bean.setDataSource(dataSource);
         return bean.getObject();

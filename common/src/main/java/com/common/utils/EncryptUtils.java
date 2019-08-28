@@ -247,9 +247,14 @@ public class EncryptUtils {
         return byteToString(AESDecrypt(decryptBASE64(baes64Encrypt)));
     }
 
+    public static String AESEncode(String content){
+        return byteToString(AESEncrypt(content.getBytes()));
+    }
+
     private static String byteToString(byte[] bytes){
         return new String(bytes);
     }
+
 
     /***
      * 获取加密数据

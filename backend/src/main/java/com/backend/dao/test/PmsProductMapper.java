@@ -1,4 +1,4 @@
-package com.backend.dao;
+package com.backend.dao.test;
 
 public interface PmsProductMapper {
 

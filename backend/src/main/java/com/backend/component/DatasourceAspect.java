@@ -47,6 +47,8 @@ public class DatasourceAspect {
             } else if(className.isAnnotationPresent(DataSource.class)){
                 DataSource annotation  = className.getAnnotation(DataSource.class);
                 dataSource = annotation.type();
+            } else{
+                dataSource = DatasourceContext.DEFAULT_DATASOURCE;
             }
             logger.info("【datasource aspect】：当前数据源: {}", dataSource);
         } catch (Exception e) {

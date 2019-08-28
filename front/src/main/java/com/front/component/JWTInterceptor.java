@@ -23,7 +23,7 @@ public class JWTInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-        String token = request.getHeader("token");
+        String token = request.getHeader("access_token");
         if(EncryptUtils.verify(token)){
             return super.preHandle(request, response, handler);
         }else{

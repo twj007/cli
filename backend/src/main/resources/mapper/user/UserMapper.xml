@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.backend.dao.user.IUserDao" >
+
+    <resultMap id="user" type="com.common.pojo.ShiroUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="create_date" property="createdate"/>
+        <result column="update_date" property="updatedate"/>
+        <result column="status" property="status"/>
+        <collection property="roles" column="id" ofType="java.lang.String" javaType="java.util.Set" select="getRoles"/>
+        <collection property="perms" column="id" ofType="java.lang.String" javaType="java.util.Set" select="getPermission"/>
+    </resultMap>
+    <sql id="user_table">
+        sys_user, sys_role, sys_role_user, sys_premission, sys_role_prem
+    </sql>
+    <sql id="user_params">
+        `id`, `username`, `nickname`, `password`, `create_date`, `update_date`
+    </sql>
+    <select id="login" parameterType="ShiroUser" resultMap="user">
+        select      <include refid="user_params"/>
+        from        sys_user
+        where       status = '2'
+        <if test="username != null">
+            and     username = #{username}
+        </if>
+        <if test="password != null">
+            and     password = #{password}
+        </if>
+    </select>
+    <select id="getRoles" parameterType="java.lang.Long" resultType="java.lang.String">
+        select    r.role_name
+        from      sys_role r
+        left join sys_role_user ru
+        on        r.id = ru.role_id and ru.user_id=#{id}
+    </select>
+    <select id="getPermission" parameterType="java.lang.Long" resultType="java.lang.String">
+        select    p.premission_type
+        from      sys_premission p
+        left join sys_role_prem rp
+        on        p.id = rp.prem_id and rp.role_id in (
+        select    r.id
+        from      sys_role r
+        left join sys_role_user ru
+        on        r.id = ru.role_id and ru.user_id=#{id})
+    </select>
+
+    <insert id="register" parameterType="ShiroUser" useGeneratedKeys="true">
+        <selectKey resultType="java.lang.Long" keyColumn="id"/>
+        insert into     sys_user
+        <set>
+            password = #{password},
+            username = #{username},
+            nickname = #{username},
+            status = '2',
+            create_date = now()
+        </set>
+    </insert>
+
+</mapper>

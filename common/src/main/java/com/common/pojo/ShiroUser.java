@@ -1,5 +1,8 @@
 package com.common.pojo;
 
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -14,8 +17,11 @@ import java.util.Set;
 public class ShiroUser implements Serializable {
 
     private Long id;       // 用户id
+    @NotNull(message = "用户名不为空")
     private String username;   // 登录名，不可改
-    private String nick;    // 用户昵称，可改
+    private String nickname;    // 用户昵称，可改
+    @NotNull(message = "密码不为空")
+    @Length(min = 6, message = "密码不少于6位")
     private String password;     // 已加密的登录密码
     private String salt;    // 加密盐值
     private Date createdate;   // 创建时间
@@ -23,6 +29,15 @@ public class ShiroUser implements Serializable {
     private Set<String> roles = new HashSet<>();    //用户所有角色值，用于shiro做角色权限的判断
     private Set<String> perms = new HashSet<>();
     private boolean rememberMe;
+
+    public ShiroUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+
+    public ShiroUser() {
+    }
 
     public boolean getRememberMe() {
         return rememberMe;
@@ -48,12 +63,12 @@ public class ShiroUser implements Serializable {
         this.username = username;
     }
 
-    public String getNick() {
-        return nick;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
+    public void setNickname(String nick) {
+        this.nickname = nick;
     }
 
     public String getPassword() {
@@ -109,7 +124,7 @@ public class ShiroUser implements Serializable {
         return "ShiroUser{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", nick='" + nick + '\'' +
+                ", nick='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", salt='" + salt + '\'' +
                 ", createdate=" + createdate +

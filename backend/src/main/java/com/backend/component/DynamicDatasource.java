@@ -19,8 +19,8 @@ public class DynamicDatasource extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
         String datasource = DatasourceContext.getDatesource();
         if(StringUtils.isEmpty(datasource)){
-            logger.error("【datasource】数据源为空");
-            throw new RuntimeException("can't get datasource");
+            logger.error("【datasource】数据源为空, 使用默认数据源");
+            datasource = DatasourceContext.DEFAULT_DATASOURCE;
         }else{
             logger.info("【datasource】数据源为: {}", datasource);
         }

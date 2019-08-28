@@ -1,9 +1,11 @@
 package com.front.config;
 
+import com.api.user.UserService;
 import com.front.component.KickOutSessionFilter;
 import com.front.component.PasswordRealm;
 import com.front.component.PasswordRetryMatcher;
 import com.front.component.ShiroRedisManager;
+import org.apache.dubbo.config.annotation.Reference;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -85,7 +87,7 @@ public class ShiroConfig {
         DefaultShiroFilterChainDefinition chain =  new DefaultShiroFilterChainDefinition();
         chain.addPathDefinition("/", "anon");
         chain.addPathDefinition("/static/**", "anon");
-        chain.addPathDefinition("/login", "anon");
+        chain.addPathDefinition("/user/login", "anon");
         chain.addPathDefinition("/register", "anon");
         chain.addPathDefinition("/admin", "authc,roles[admin]");
         chain.addPathDefinition("/**", "authc");
@@ -107,12 +109,13 @@ public class ShiroConfig {
         //配置filterMap的时候，范围大的放在后面，不然会被覆盖权限
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/v1", "anon");
+        filterChainDefinitionMap.put("/isRegister", "anon");
         filterChainDefinitionMap.put("/accessToken", "anon");
         filterChainDefinitionMap.put("/auth", "anon");
         filterChainDefinitionMap.put("/getUserInfo", "anon");
         filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/login", "anon,kickout");
-        filterChainDefinitionMap.put("/register", "anon");
+        filterChainDefinitionMap.put("/user/login", "anon,kickout");
+        filterChainDefinitionMap.put("/user/register", "anon");
         filterChainDefinitionMap.put("/admin", "authc,roles[admin]");
         filterChainDefinitionMap.put("/**", "authc,kickout");
 
@@ -123,6 +126,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         shiroFilterFactoryBean.setLoginUrl("/toLogin");
+        shiroFilterFactoryBean.setLoginUrl("/user/logout");
         shiroFilterFactoryBean.setUnauthorizedUrl("/unAuthorized");
         return shiroFilterFactoryBean;
     }
@@ -198,4 +202,5 @@ public class ShiroConfig {
         matcher.setStoredCredentialsHexEncoded(true);//16进制格式存储
         return matcher;
     }
+
 }

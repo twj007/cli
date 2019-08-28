@@ -7,6 +7,8 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,13 +25,18 @@ public class ErrorResolver {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity exceptionhandler(Exception e){
-        e.printStackTrace();
+        logger.error("【exception】: {}", e.fillInStackTrace());
         if(e.getCause() instanceof KickOutException){
             logger.warn("【login】: 用户{} 已被顶出", ((KickOutException)e.getCause()).getSessionId());
             return ResponseEntity.badRequest().body("你已被顶出，请重新登陆");
         }
+        if(e instanceof BindException){
+            logger.warn("【login】: {}", ((BindException)e).getAllErrors());
+            return ResponseEntity.badRequest().body(((BindingResult)e).getAllErrors());
+        }
         return ResponseEntity.badRequest().body("系统异常");
     }
+
 
 
     @ExceptionHandler(AuthenticationException.class)
