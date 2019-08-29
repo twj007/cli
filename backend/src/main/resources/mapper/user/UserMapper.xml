@@ -60,4 +60,24 @@
         </set>
     </insert>
 
+    <sql id="menu">
+        distinct m.id, `name`, parent_id as pId, create_date createdate, url, icon, `desc`
+    </sql>
+    <select id="getMenu" parameterType="Menu" resultType="Menu">
+        select        <include refid="menu"/>
+        from          sys_menu m,
+                      sys_role_menu rm
+        where         m.id=rm.menu_id
+        and           rm.role_id in (
+        select    r.id
+        from      sys_role r
+        left join sys_role_user ru
+        on        r.id = ru.role_id and ru.user_id=#{userId})
+        <if test="pId != null">
+            and     FIND_IN_SET(parent_id, #{pId})
+        </if>
+    </select>
+    <select id="getRecord" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select status from ums_role where id=#{_parameter}
+    </select>
 </mapper>

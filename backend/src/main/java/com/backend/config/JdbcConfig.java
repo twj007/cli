@@ -14,8 +14,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -119,11 +122,18 @@ public class JdbcConfig {
     }
 
 
+    /****
+     * 默认返回的事务管理器
+     * @param dataSource
+     * @return
+     */
     @Bean("transactionManager")
+    @Primary
     public DataSourceTransactionManager dataSourceTransactionManager(@Qualifier("dynamicDatasource")DataSource dataSource){
         DataSourceTransactionManager manager = new DataSourceTransactionManager();
         manager.setDataSource(dataSource);
         return  manager;
     }
+
 
 }

@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  **@Date: 2019/06/19
  **/
 @Aspect
-@Order(1)
+@Order(5)
 @Component
 public class DatasourceAspect {
 

@@ -2,6 +2,8 @@ package com.front.api;
 
 import com.api.user.UserService;
 import com.common.pojo.ShiroUser;
+import com.common.pojo.user.Menu;
+import com.common.pojo.user.UserInfo;
 import com.common.utils.EncryptUtils;
 import com.common.utils.ResultBody;
 import com.common.utils.Results;
@@ -13,6 +15,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -35,10 +38,11 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/user")
+@Api(value = "user", description = "用户模块")
 public class UserController {
 
 
-    @Reference
+    @Reference(filter = "RpcFilter", timeout = 10000)
     private UserService userService;
 
     /***
@@ -82,11 +86,13 @@ public class UserController {
             token.setRememberMe(true);
         }
         subject.login(token);
+        user = (ShiroUser) subject.getPrincipal();
         request.getSession().setAttribute("username", user.getUsername());
-        String access_token = EncryptUtils.encode(user.getUsername(), user.getUsername());
+        user.setPassword("");
+        String access_token = EncryptUtils.encode(user, user.getUsername());
         response.addCookie(new Cookie("access_token", access_token));
         response.addHeader("access_token", access_token);
-        response.addHeader("refresh", "3;url='/user/checkPermission'");
+        response.addHeader("refresh", "3;url='/user/homepage'");
         return Results.SUCCESS.result("login success, you'll be redirect to homepage in 3sec", null);
     }
 
@@ -121,25 +127,67 @@ public class UserController {
     }
 
     @GetMapping("/checkPermission")
-    @RequiresPermissions("search")
+    @RequiresPermissions("admin:search")
     public ResultBody check(){
         return Results.SUCCESS.result("ok,you have permission", null);
     }
 
+    @GetMapping("/homepage")
+    @RequiresPermissions("user:search")
+    @ApiOperation(value = "获取用户首页", notes = "获取用户个人信息，菜单等")
+    public ResultBody homePage(HttpServletRequest request){
 
-    @GetMapping("/getInfo")
-    @RequiresPermissions("search")
-    public ResultBody getInfo(){
+        String access_token = request.getHeader("access_token");
+        String issuer = EncryptUtils.getIssuer(access_token);
+        String id = EncryptUtils.decode(issuer, access_token, "id");
+
+        Menu m = new Menu();
+        m.setUserId(Long.valueOf(id));
+        m.setPId(0L);
+        List<Menu> menu = userService.getMenu(m);
+
+        ShiroUser user = new ShiroUser();
+        user.setId(Long.valueOf(id));
+        UserInfo info = userService.getUserInfo(user);
+
+        return Results.SUCCESS.result("", menu);
+    }
+
+
+    @GetMapping("/getMenuAjax")
+    @RequiresPermissions("user:search")
+    public ResultBody getMenuAjax(@RequestParam(value = "pId", required = false)Long pId,HttpServletRequest request){
+
+        String access_token = request.getHeader("access_token");
+        String issuer = EncryptUtils.getIssuer(access_token);
+        String id = EncryptUtils.decode(issuer, access_token, "id");
+
+        Menu m = new Menu();
+        m.setUserId(Long.valueOf(id));
+        m.setPId(0L);
+        if(pId != null){
+            m.setPId(pId);
+        }
+        List<Menu> menu = userService.getMenu(m);
+
+        return Results.SUCCESS.result("success", menu);
+    }
+
+    @GetMapping("/getOrgAjax")
+    @RequiresPermissions("user:search")
+    public ResultBody getOrgAjax(){
 
         return Results.SUCCESS.result("success", null);
     }
 
     @GetMapping("/logout")
-    public ResultBody logout(HttpServletRequest request){
+    public ResultBody logout(HttpServletRequest request, HttpServletResponse response){
+
         Subject subject = SecurityUtils.getSubject();
         if(subject.getPrincipal() != null){
             subject.logout();
         }
+
         return Results.SUCCESS.result("登出成功", null);
     }
 }

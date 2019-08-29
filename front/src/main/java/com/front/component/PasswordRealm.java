@@ -17,6 +17,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 
 /***
@@ -30,6 +31,8 @@ public class PasswordRealm extends AuthorizingRealm {
     //这样注入为空，在配置文件中注册服务
 //    @Reference(interfaceClass = UserService.class, lazy = true, check = false)
     private UserService userService;
+
+
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {

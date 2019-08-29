@@ -1,7 +1,6 @@
 package com.common.pojo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -13,17 +12,32 @@ import java.util.Date;
  **/
 @Getter
 @Setter
+@ToString
 public class RequestRecord {
 
-    private String uri;
+    private String method;
 
-    private Date createDate;
+    private String remoteAddr;
 
-    private Date expireDate;
+    private int remotePort;
 
-    private Integer port;
+    private String requestURI ;
 
-    private String address;
+    private String request;
 
-    private Integer count;
+    private long currentDate;
+
+    private String args;
+
+    public RequestRecord() {
+
+    }
+    public RequestRecord(String method, String remoteAddr, int remotePort, String requestURI, long date, String args) {
+        this.method = method;
+        this.remoteAddr = remoteAddr;
+        this.remotePort = remotePort;
+        this.requestURI = requestURI;
+        this.currentDate = date;
+        this.args = args;
+    }
 }

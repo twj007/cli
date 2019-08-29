@@ -125,9 +125,7 @@ public class ShiroConfig {
         filterMap.put("kickout", new KickOutSessionFilter(1, true, sessionManager, redisTemplate));
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
-        shiroFilterFactoryBean.setLoginUrl("/toLogin");
-        shiroFilterFactoryBean.setLoginUrl("/user/logout");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/unAuthorized");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/user/logout");
         return shiroFilterFactoryBean;
     }
 

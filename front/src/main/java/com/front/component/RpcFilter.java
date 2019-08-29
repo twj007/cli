@@ -16,13 +16,11 @@ import org.springframework.stereotype.Component;
 @RefreshScope
 public class RpcFilter implements Filter {
 
-    @Value("${app.dubbo.code}")
-    private String appCode;
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-
-        String encryptedCode = EncryptUtils.AESDecode(appCode);
+        String appCode = invoker.getUrl().getParameter("application");
+        String encryptedCode = EncryptUtils.AESEncode(appCode);
         RpcContext.getContext().setAttachment("appCode", appCode);
         RpcContext.getContext().setAttachment("aesCode", encryptedCode);
         return invoker.invoke(invocation);

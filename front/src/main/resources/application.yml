@@ -15,7 +15,9 @@ spring:
       discovery:
         server-addr: 47.100.206.158:8081
         namespace: 949b591c-dd20-48cf-9032-c5d1e0405577
-
+app:
+  dubbo:
+    code: ${spring.application.name}
 dubbo:
   registry:
     address: spring-cloud://47.100.206.158:8081

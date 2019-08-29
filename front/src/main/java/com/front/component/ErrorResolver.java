@@ -2,6 +2,8 @@ package com.front.component;
 
 import com.common.exception.KickOutException;
 import com.common.exception.LoginTooBusyException;
+import org.apache.dubbo.remoting.RemotingException;
+import org.apache.dubbo.rpc.RpcException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
@@ -24,7 +26,7 @@ public class ErrorResolver {
     private static final Logger logger = LoggerFactory.getLogger(ErrorResolver.class);
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity exceptionhandler(Exception e){
+    public ResponseEntity exceptionHandler(Exception e){
         logger.error("【exception】: {}", e.fillInStackTrace());
         if(e.getCause() instanceof KickOutException){
             logger.warn("【login】: 用户{} 已被顶出", ((KickOutException)e.getCause()).getSessionId());
@@ -57,5 +59,15 @@ public class ErrorResolver {
     @ExceptionHandler(LoginTooBusyException.class)
     public ResponseEntity unexpectedException(LoginTooBusyException e){
         return ResponseEntity.badRequest().body("密码出错次数过多，请在5分钟后重试");
+    }
+
+    @ExceptionHandler(RpcException.class)
+    public ResponseEntity rpcException(RpcException e){
+        return ResponseEntity.badRequest().body("接口调用异常");
+    }
+
+    @ExceptionHandler(RemotingException.class)
+    public ResponseEntity remotingException(RemotingException e){
+        return ResponseEntity.badRequest().body("远程调用失败");
     }
 }
