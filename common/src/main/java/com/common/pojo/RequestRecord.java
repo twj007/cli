@@ -29,6 +29,8 @@ public class RequestRecord {
 
     private String args;
 
+    private String clazz;
+
     public RequestRecord() {
 
     }
@@ -39,5 +41,14 @@ public class RequestRecord {
         this.requestURI = requestURI;
         this.currentDate = date;
         this.args = args;
+    }
+    public RequestRecord(String method, String remoteAddr, int remotePort, String requestURI, long date, String args, String clazz) {
+        this.method = method;
+        this.remoteAddr = remoteAddr;
+        this.remotePort = remotePort;
+        this.requestURI = requestURI;
+        this.currentDate = date;
+        this.args = args;
+        this.clazz = clazz;
     }
 }

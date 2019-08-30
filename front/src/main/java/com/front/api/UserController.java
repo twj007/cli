@@ -190,4 +190,7 @@ public class UserController {
 
         return Results.SUCCESS.result("登出成功", null);
     }
+
+    @GetMapping("/runAs")
+    public ResultBody runAs(){return Results.SUCCESS.result("", null);}
 }

@@ -22,4 +22,6 @@ public interface UserService {
     List<Menu> getMenu(Menu m);
 
     UserInfo getUserInfo(ShiroUser user);
+
+    List<Menu> getMenuListByUser(ShiroUser user);
 }

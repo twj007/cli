@@ -61,7 +61,7 @@
     </insert>
 
     <sql id="menu">
-        distinct m.id, `name`, parent_id as pId, create_date createdate, url, icon, `desc`
+        distinct m.id, `name`, parent_id as pId, m.create_date createdate, url, icon, `desc`
     </sql>
     <select id="getMenu" parameterType="Menu" resultType="Menu">
         select        <include refid="menu"/>
@@ -79,5 +79,17 @@
     </select>
     <select id="getRecord" parameterType="java.lang.Long" resultType="java.lang.Long">
         select status from ums_role where id=#{_parameter}
+    </select>
+    <select id="getMenuListByUser" parameterType="java.lang.Long" resultType="Menu">
+        select      <include refid="menu"/>
+        from        sys_menu m,
+                    sys_role r,
+                    sys_role_menu rm
+        where       m.id=rm.menu_id
+        and         r.id=rm.role_id
+        and         r.id in (
+        select      ru.role_id
+        from        sys_role_user ru
+        where       ru.user_id=#{id});
     </select>
 </mapper>

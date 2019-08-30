@@ -2,6 +2,7 @@ package com.backend.dao.user;
 
 import com.common.pojo.ShiroUser;
 import com.common.pojo.user.Menu;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface IUserDao {
     List<Menu> getMenu(Menu menu);
 
     Long getRecord(Long id);
+
+    List<Menu> getMenuListByUser(@Param("id")Long id);
 }

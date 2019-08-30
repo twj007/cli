@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.backend.dao.dict.IDictDao" >
+
+    <resultMap id="dict" type="com.common.pojo.dict.Dict">
+        <id column="id" property="id"/>
+        <result column="key" property="key"/>
+        <result column="value" property="value"/>
+        <result column="description" property="description"/>
+        <result column="create_date" property="createdate"/>
+        <result column="update_date" property="updatedate"/>
+        <result column="status" property="status"/>
+        <collection property="detail" column="id" ofType="com.common.pojo.dict.DictDetail" javaType="java.util.ArrayList" select="getDictDetails"/>
+    </resultMap>
+
+    <resultMap id="dictDetail" type="com.common.pojo.dict.DictDetail">
+        <id column="id" property="id"/>
+        <result column="key" property="key"/>
+        <result column="value" property="value"/>
+        <result column="description" property="description"/>
+        <result column="create_date" property="createdate"/>
+        <result column="update_date" property="updatedate"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <sql id="dict_value"> id, key_type keyType, value, create_date as createdate, update_date as updatedate, status</sql>
+
+    <select id="getDicts" parameterType="Dict" resultMap="dict">
+        select    <include refid="dict_value"/>
+        from      sys_dict
+        <where>
+            status = 'Y'
+            <if test="id != null">
+                and id=#{id}
+            </if>
+            <if test="keyType != null">
+                and key_type=#{keyType}
+            </if>
+        </where>
+    </select>
+
+    <sql id="dict_detail"> id, parent_id as parentId, key_type keyType, value, create_date as createdate, update_date as updatedate, status</sql>
+    <select id="getDictDetails" parameterType="java.lang.Long" resultType="DictDetail">
+        select <include refid="dict_value"/>
+        from    sys_dict_detail sdd
+        where   sdd.parent_id=#{id} and sdd.status='Y'
+    </select>
+
+
+    <insert id="saveDict" parameterType="Dict">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into     sys_dict
+        <set>
+            <if test="keyType != null">
+                key_type=#{keyType},
+            </if>
+            <if test="value != null">
+                value=#{value},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            status='Y',
+            create_date=now()
+        </set>
+    </insert>
+
+    <insert id="saveDictDetail" parameterType="DictDetail">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into     sys_dict_detail
+        <set>
+            <if test="keyType != null">
+                key_type=#{keyType},
+            </if>
+            <if test="parentId != null">
+                parent_id=#{parentId},
+            </if>
+            <if test="value != null">
+                value=#{value},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+            status='Y',
+            create_date=now()
+        </set>
+    </insert>
+</mapper>

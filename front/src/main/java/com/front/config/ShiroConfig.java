@@ -80,7 +80,7 @@ public class ShiroConfig {
 //    }
 
     /***
-     *
+     * @deprecated
      * @return
      */
     ShiroFilterChainDefinition shiroFilterChainDefinition(){
@@ -126,6 +126,7 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilters(filterMap);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         shiroFilterFactoryBean.setUnauthorizedUrl("/user/logout");
+//        shiroFilterFactoryBean.setLoginUrl("/user/toLogin"); 前端通过interceptor跳转至登陆页面
         return shiroFilterFactoryBean;
     }
 
