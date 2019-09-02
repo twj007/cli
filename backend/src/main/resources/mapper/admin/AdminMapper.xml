@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.backend.dao.admin.IAdminDao" >
+
+    <sql id="role">
+        id, role_name name, create_date createdate, update_date updatedate, status
+    </sql>
+
+    <select id="getRoles" parameterType="Role" resultType="Role">
+        select   <include refid="role"/>
+        from      sys_role
+        <where>
+            <if test="name != null">
+                role_name like concat(#{name}, '%')
+            </if>
+            <if test="name != null and desc != null">
+                and description like concat(#{desc}, '%')
+            </if>
+            <if test="name == null and desc != null">
+                description like concat(#{desc}, '%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="saveRole" parameterType="Role">
+        insert  into    sys_role
+        <set>
+            <if test="name != null">
+                role_name = #{name},
+            </if>
+            <if test="desc != null">
+                description = #{desc},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            create_date = now(),
+            status = 'Y'
+        </set>
+    </insert>
+    
+    <update id="updateRole" parameterType="Role">
+        update    sys_role
+        <set>
+            <if test="name != null">
+                role_name = #{name},
+            </if>
+            <if test="desc != null">
+                description = #{desc},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+                update_date = now()
+        </set>
+        where     id = #{id}
+    </update>
+
+</mapper>

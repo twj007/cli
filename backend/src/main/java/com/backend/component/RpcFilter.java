@@ -19,7 +19,7 @@ import static com.common.utils.EncryptUtils.AESDecode;
  **@description:
  **@Author: twj
  **@Date: 2019/08/28
- * AES
+ * AES(app name + 时间戳)
  **/
 @Component
 public class RpcFilter implements Filter {
@@ -28,11 +28,12 @@ public class RpcFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String appCode = RpcContext.getContext().getAttachment("appCode");
         String AESCode = RpcContext.getContext().getAttachment("aesCode");
+        String dateTime = RpcContext.getContext().getAttachment("timestamp");
         if(StringUtils.isEmpty(appCode) || StringUtils.isEmpty(AESCode)){
             throw new RpcException("invalid attachment!");
         }
         String code = EncryptUtils.AESDecode(AESCode);
-        if(!appCode.equals(code)){
+        if(!appCode.equals(code + dateTime)){
             throw new RpcException("invalid app code");
         }
         return invoker.invoke(invocation);

@@ -1,32 +1,33 @@
-package com.common.pojo.user;
+package com.common.pojo.role;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Date;
-import java.util.List;
 
 /***
  **@project: cli
  **@description:
  **@Author: twj
- **@Date: 2019/08/29
+ **@Date: 2019/09/02
  **/
 @Getter
 @Setter
 @ToString
-public class Menu {
+public class Role {
 
     private Long id;
+
     private String name;
-    private String desc;
-    private String url;
+
     private Date createdate;
-    private String icon;
-    private List<Menu> child;
-    private Long pId;
+
+    private Date updaedate;
+
+    private String status;
+
+    private String desc;
+
     private Long userId;
-    private Long roleId;
-    private String type;
 }

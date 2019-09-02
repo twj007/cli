@@ -5,6 +5,8 @@ import com.common.pojo.user.Menu;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -37,13 +39,24 @@ public class TreeUtils
         m5.setPId(4L);
         m5.setId(5L);
         m5.setName("子菜单1-1");
+        Menu m6 = new Menu();
+        m6.setPId(4L);
+        m6.setId(6L);
+        m6.setName("子菜单1-2");
+        Menu m7 = new Menu();
+        m7.setPId(5L);
+        m7.setId(7L);
+        m7.setName("子菜单1-1-1");
         menus.add(m);
         menus.add(m2);
         menus.add(m3);
         menus.add(m4);
         menus.add(m5);
+        menus.add(m6);
+        menus.add(m7);
         List<Menu> mm = getChildPerms(menus, m.getPId());
         System.out.println(mm);
+
     }
 
     /**
@@ -55,17 +68,23 @@ public class TreeUtils
     public static List<Menu> getChildPerms(List<Menu> list, Long parentId)
     {
         List<Menu> returnList = new ArrayList<Menu>();
-        for (Iterator<Menu> iterator = list.iterator(); iterator.hasNext();)
-        {
-            Menu t = (Menu) iterator.next();
-            // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
-            if (t.getPId() == parentId)
-            {
-                recursionFn(list, t);
-                returnList.add(t);
-            }
+        //获取一级菜单
+        List<Menu> parentList = list.stream().filter(l -> l.getPId() == parentId).collect(Collectors.toList());
+        Iterator it = parentList.stream().iterator();
+        while(it.hasNext()){
+            Menu t = (Menu) it.next();
+            recursion(list, t);
+            returnList.add(t);
         }
         return returnList;
+    }
+
+    private static void recursion(List<Menu> list, Menu t){
+        List<Menu> childList = list.stream().filter(p -> p.getPId() == t.getId()).collect(Collectors.toList());
+        t.setChild(childList);
+        for(Menu m : childList){
+            recursion(list, m);
+        }
     }
 
     /**

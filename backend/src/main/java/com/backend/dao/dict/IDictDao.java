@@ -22,4 +22,12 @@ public interface IDictDao {
     Long saveDict(Dict dict);
 
     Long saveDictDetail(DictDetail dictDetail);
+
+    Long updateDict(Dict dict);
+
+    Long updateDictDetail(DictDetail detail);
+
+    Long saveDicts(List<Dict> dicts);
+
+    Long saveDictDetails(List<DictDetail> detail);
 }

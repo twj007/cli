@@ -15,7 +15,14 @@ public interface DictService {
 
     DictDetail saveDictDetail(DictDetail dictDetail);
 
+    Long updateDict(Dict dict);
+
+    Long updateDictDetail(DictDetail detail);
+
+    Long deleteDict(Dict dict);
+
+    Long deleteDictDetail(DictDetail detail);
+
     Long importDict(List<Dict> dicts);
 
-    Long importDictDetail(List<DictDetail> details);
 }

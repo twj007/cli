@@ -48,8 +48,10 @@
         on        r.id = ru.role_id and ru.user_id=#{id})
     </select>
 
-    <insert id="register" parameterType="ShiroUser" useGeneratedKeys="true">
-        <selectKey resultType="java.lang.Long" keyColumn="id"/>
+    <insert id="register" parameterType="ShiroUser">
+        <selectKey resultType="java.lang.Long" keyProperty="id" keyColumn="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         insert into     sys_user
         <set>
             password = #{password},
@@ -60,36 +62,8 @@
         </set>
     </insert>
 
-    <sql id="menu">
-        distinct m.id, `name`, parent_id as pId, m.create_date createdate, url, icon, `desc`
-    </sql>
-    <select id="getMenu" parameterType="Menu" resultType="Menu">
-        select        <include refid="menu"/>
-        from          sys_menu m,
-                      sys_role_menu rm
-        where         m.id=rm.menu_id
-        and           rm.role_id in (
-        select    r.id
-        from      sys_role r
-        left join sys_role_user ru
-        on        r.id = ru.role_id and ru.user_id=#{userId})
-        <if test="pId != null">
-            and     FIND_IN_SET(parent_id, #{pId})
-        </if>
-    </select>
     <select id="getRecord" parameterType="java.lang.Long" resultType="java.lang.Long">
         select status from ums_role where id=#{_parameter}
     </select>
-    <select id="getMenuListByUser" parameterType="java.lang.Long" resultType="Menu">
-        select      <include refid="menu"/>
-        from        sys_menu m,
-                    sys_role r,
-                    sys_role_menu rm
-        where       m.id=rm.menu_id
-        and         r.id=rm.role_id
-        and         r.id in (
-        select      ru.role_id
-        from        sys_role_user ru
-        where       ru.user_id=#{id});
-    </select>
+
 </mapper>

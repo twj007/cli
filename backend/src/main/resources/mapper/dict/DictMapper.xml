@@ -23,7 +23,7 @@
         <result column="status" property="status"/>
     </resultMap>
 
-    <sql id="dict_value"> id, key_type keyType, value, create_date as createdate, update_date as updatedate, status</sql>
+    <sql id="dict_value"> id, key_type keyType, value, description, create_date as createdate, update_date as updatedate, status</sql>
 
     <select id="getDicts" parameterType="Dict" resultMap="dict">
         select    <include refid="dict_value"/>
@@ -88,5 +88,64 @@
             status='Y',
             create_date=now()
         </set>
+    </insert>
+
+    <update id="updateDict" parameterType="Dict">
+        update    sys_dict
+        <set>
+            <if test="keyType != null">
+                key_type = #{keyType},
+            </if>
+            <if test="value != null">
+                value = #{value},
+            </if>
+            <if test="description != null">
+                description = #{description}
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_date=now();
+        </set>
+    </update>
+
+    <update id="updateDictDetail" parameterType="DictDetail">
+        update    sys_dict_detail
+        <set>
+            <if test="keyType != null">
+                key_type = #{keyType},
+            </if>
+            <if test="value != null">
+                value = #{value},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_date=now()
+        </set>
+    </update>
+
+    <insert id="saveDicts" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        insert into     sys_dict(
+          key_type, value, create_date, description, status
+        )
+        values
+        <foreach collection="list" item="i" separator=",">
+            (#{i.keyType}, #{i.value}, now(), #{i.description}, 'Y')
+        </foreach>
+
+    </insert>
+
+    <insert id="saveDictDetails" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        insert into     sys_dict_detail(
+        key_type, value, create_date, description, status, parent_id
+        )
+        values
+        <foreach collection="list" item="i" separator=",">
+            (#{i.keyType}, #{i.value}, now(), #{i.description}, 'Y', #{i.parentId})
+        </foreach>
     </insert>
 </mapper>

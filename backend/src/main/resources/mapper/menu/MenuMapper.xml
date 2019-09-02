@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.backend.dao.menu.IMenuDao" >
+
+
+    <sql id="menu">
+        distinct m.id, `name`, parent_id as pId, m.create_date createdate, url, icon, `desc`
+    </sql>
+
+    <select id="getMenu" parameterType="Menu" resultType="Menu">
+        select        <include refid="menu"/>
+        from          sys_menu m,
+        sys_role_menu rm
+        where         m.status='Y'
+        and           m.id=rm.menu_id
+        and           rm.role_id in (
+        select    r.id
+        from      sys_role r
+        left join sys_role_user ru
+        on        r.id = ru.role_id and ru.user_id=#{userId})
+        <if test="pId != null">
+            and     FIND_IN_SET(parent_id, #{pId})
+        </if>
+    </select>
+
+
+    <select id="getMenuListByUser" parameterType="java.lang.Long" resultType="Menu">
+        select      <include refid="menu"/>
+        from        sys_menu m,
+        sys_role r,
+        sys_role_menu rm
+        where       m.status='Y'
+        and         r.status='Y'
+        and         m.id=rm.menu_id
+        and         r.id=rm.role_id
+        and         r.id in (
+        select      ru.role_id
+        from        sys_role_user ru
+        where       ru.user_id=#{id});
+    </select>
+
+    <insert id="saveMenu" parameterType="Menu">
+        <selectKey keyColumn="id" resultType="java.lang.Long" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into     sys_menu
+        <set>
+           <if test="name != null">
+               name=#{name},
+           </if>
+            <if test="desc != null">
+                description=#{desc},
+            </if>
+            <if test="url != null">
+                url=#{url},
+            </if>
+            <if test="icon != null">
+                icon=#{icon},
+            </if>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="type != null">
+                type=#{type},
+            </if>
+            <if test="pId != null">
+                parent_id=#{pId},
+            </if>
+                create_date=now(),
+                status = 'Y'
+        </set>
+    </insert>
+    <insert id="saveMenuRelation" parameterType="Menu">
+        insert into     sys_role_menu
+        set             role_id=#{roleId}, menu_id=#{id}
+    </insert>
+
+    <update id="updateMenu" parameterType="Menu">
+        update    sys_menu
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="desc != null">
+                description = #{desc},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="icon != null">
+                icon = #{icon},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            update_date=now()
+        </set>
+    </update>
+</mapper>

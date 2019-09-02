@@ -8,7 +8,9 @@ import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Iterator;
 import java.util.List;
 
 /***
@@ -18,6 +20,7 @@ import java.util.List;
  **@Date: 2019/08/30
  **/
 @Service(timeout = 10000, filter = "RpcFilter", interfaceClass = com.api.dict.DictService.class)
+@Transactional
 public class DictService implements com.api.dict.DictService {
 
     @Autowired
@@ -59,13 +62,44 @@ public class DictService implements com.api.dict.DictService {
     }
 
     @Override
-    public Long importDict(List<Dict> dicts) {
-        return null;
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Long updateDict(Dict dict) {
+        return dictDao.updateDict(dict);
     }
 
     @Override
-    public Long importDictDetail(List<DictDetail> details) {
-        return null;
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Long updateDictDetail(DictDetail detail) {
+        return dictDao.updateDictDetail(detail);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Long deleteDict(Dict dict) {
+        return dictDao.updateDict(dict);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Long deleteDictDetail(DictDetail detail) {
+        return dictDao.updateDictDetail(detail);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public Long importDict(List<Dict> dicts) {
+        Long nums = dictDao.saveDicts(dicts);
+        if(nums == dicts.size()){
+            dicts.stream().forEach(dict -> {
+                List<DictDetail> detail = dict.getDetail();
+                detail.forEach(d -> {d.setParentId(dict.getId());});
+                dictDao.saveDictDetails(detail);
+            });
+            return nums;
+        }else{
+            throw new RuntimeException("save dicts failed");
+        }
+
     }
 
 

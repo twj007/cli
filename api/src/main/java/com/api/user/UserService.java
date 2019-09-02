@@ -18,10 +18,9 @@ public interface UserService {
 
     ShiroUser register(ShiroUser shiroUser);
 
-    //单层搜索
-    List<Menu> getMenu(Menu m);
-
     UserInfo getUserInfo(ShiroUser user);
 
-    List<Menu> getMenuListByUser(ShiroUser user);
+    UserInfo updateUserInfo(UserInfo userInfo);
+
+
 }

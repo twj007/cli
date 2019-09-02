@@ -3,15 +3,11 @@ package com.backend.service.user;
 import com.backend.dao.user.IUserDao;
 import com.common.annotation.DataSource;
 import com.common.pojo.ShiroUser;
-import com.common.pojo.user.Menu;
 import com.common.pojo.user.UserInfo;
-import com.common.utils.TreeUtils;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.*;
 
 /***
  **@project: cli
@@ -39,17 +35,6 @@ public class UserService implements com.api.user.UserService {
         return shiroUser;
     }
 
-    /***
-     * 递归获取单级menu
-     * @param m
-     * @return
-     */
-    @Override
-    public List<Menu> getMenu(Menu m) {
-        List<Menu> Menu = userDao.getMenu(m);
-        return Menu;
-    }
-
     @Override
     public UserInfo getUserInfo(ShiroUser user) {
         //UserInfo info = userDao.getUserInfo(user);
@@ -58,14 +43,9 @@ public class UserService implements com.api.user.UserService {
     }
 
     @Override
-    public List<Menu> getMenuListByUser(ShiroUser user) {
-        List<Menu> menus =  userDao.getMenuListByUser(user.getId());
-        //从根节点递归菜单
-        menus = TreeUtils.getChildPerms(menus, 0L);
-        return menus;
+    public UserInfo updateUserInfo(UserInfo userInfo) {
+        return null;
     }
-
-
 
     @DataSource(type = "slaver")
     @Transactional(readOnly = true)
