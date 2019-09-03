@@ -1,19 +1,7 @@
-# 自定义配置通过配置中心获取并初始化
-server:
-  port: 8005
-
 oauth2:
-  server:
-    mall:
-      address: http://localhost:8006
   client:
     id: a1543a1290dbbcd80cfa
     secret: dc5b0bc2706e0c7abd917f596d8d0fb1353002e1
-    access_token_url: ${oauth2.server.mall.address}/accessToken
-    user_info_url: ${oauth2.server.mall.address}/getUserInfo
-    redirect_uri: ${oauth2.server.mall.address}/index
-shiro:
-  loginUrl: /login
 
 spring:
   cloud:
@@ -32,4 +20,3 @@ dubbo:
     port: -1
   cloud:
     subscribed-services: rio-backend-dev
-

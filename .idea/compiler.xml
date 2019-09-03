@@ -13,6 +13,7 @@
         <module name="consumer" />
         <module name="front" />
         <module name="nacos" />
+        <module name="oauth2Server" />
         <module name="sentinel" />
       </profile>
     </annotationProcessing>

@@ -1,5 +1,6 @@
-package com.front.api;
+package com.front.api.user;
 
+import com.api.menu.MenuService;
 import com.api.user.UserService;
 import com.common.pojo.ShiroUser;
 import com.common.pojo.user.Menu;
@@ -10,19 +11,30 @@ import com.common.utils.Results;
 import com.google.common.base.Charsets;
 import io.swagger.annotations.*;
 import org.apache.dubbo.config.annotation.Reference;
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +50,7 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/user")
+@RefreshScope
 @Api(value = "user", description = "用户模块")
 public class UserController {
 
@@ -53,6 +66,9 @@ public class UserController {
     UserService userService(){
         return userService;
     }
+
+    @Reference(filter = "RpcFilter", timeout = 10000)
+    private MenuService menuService;
 
     /****
      * 这边再登陆完成后需要再次请求一次才会把另一个请求顶掉（前端强制成功后跳转）
@@ -144,7 +160,7 @@ public class UserController {
         Menu m = new Menu();
         m.setUserId(Long.valueOf(id));
         m.setPId(0L);
-        List<Menu> menu = userService.getMenu(m);
+        List<Menu> menu = menuService.getMenu(m);
 
         ShiroUser user = new ShiroUser();
         user.setId(Long.valueOf(id));
@@ -168,7 +184,7 @@ public class UserController {
         if(pId != null){
             m.setPId(pId);
         }
-        List<Menu> menu = userService.getMenu(m);
+        List<Menu> menu = menuService.getMenu(m);
 
         return Results.SUCCESS.result("success", menu);
     }
@@ -193,4 +209,6 @@ public class UserController {
 
     @GetMapping("/runAs")
     public ResultBody runAs(){return Results.SUCCESS.result("", null);}
+
+
 }

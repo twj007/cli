@@ -4,13 +4,11 @@ import com.backend.dao.dict.IDictDao;
 import com.common.annotation.DataSource;
 import com.common.pojo.dict.Dict;
 import com.common.pojo.dict.DictDetail;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.Iterator;
 import java.util.List;
 
 /***
@@ -20,7 +18,7 @@ import java.util.List;
  **@Date: 2019/08/30
  **/
 @Service(timeout = 10000, filter = "RpcFilter", interfaceClass = com.api.dict.DictService.class)
-@Transactional
+@Slf4j
 public class DictService implements com.api.dict.DictService {
 
     @Autowired
@@ -28,7 +26,6 @@ public class DictService implements com.api.dict.DictService {
 
     @Override
     @DataSource
-    @Transactional(readOnly = true)
     public List<Dict> getDicts(Dict dict) {
         return dictDao.getDicts(dict);
     }
@@ -92,11 +89,12 @@ public class DictService implements com.api.dict.DictService {
         if(nums == dicts.size()){
             dicts.stream().forEach(dict -> {
                 List<DictDetail> detail = dict.getDetail();
-                detail.forEach(d -> {d.setParentId(dict.getId());});
+                detail.forEach(d -> d.setParentId(dict.getId()));
                 dictDao.saveDictDetails(detail);
             });
             return nums;
         }else{
+            log.error("method:{importDict}, save dicts failed");
             throw new RuntimeException("save dicts failed");
         }
 
