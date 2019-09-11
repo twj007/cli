@@ -2,7 +2,7 @@ package com.backend.service.user;
 
 import com.backend.dao.user.IUserDao;
 import com.common.annotation.DataSource;
-import com.common.pojo.ShiroUser;
+import com.common.pojo.SysUser;
 import com.common.pojo.user.UserInfo;
 import org.apache.dubbo.config.annotation.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +23,20 @@ public class UserService implements com.api.user.UserService {
 
     @Override
     @DataSource
-    public ShiroUser login(ShiroUser user) {
+    public SysUser login(SysUser user) {
         return userDao.login(user);
     }
 
     @Override
     @DataSource
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public ShiroUser register(ShiroUser shiroUser) {
+    public SysUser register(SysUser shiroUser) {
         userDao.register(shiroUser);
         return shiroUser;
     }
 
     @Override
-    public UserInfo getUserInfo(ShiroUser user) {
+    public UserInfo getUserInfo(SysUser user) {
         //UserInfo info = userDao.getUserInfo(user);
         UserInfo info = null;
         return info;
@@ -45,6 +45,11 @@ public class UserService implements com.api.user.UserService {
     @Override
     public UserInfo updateUserInfo(UserInfo userInfo) {
         return null;
+    }
+
+    @Override
+    public SysUser getById(Long id) {
+        return userDao.getById(id);
     }
 
     @DataSource(type = "slaver")

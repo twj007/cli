@@ -1,6 +1,6 @@
 package com.api.menu;
 
-import com.common.pojo.ShiroUser;
+import com.common.pojo.SysUser;
 import com.common.pojo.user.Menu;
 
 import java.util.List;
@@ -10,7 +10,7 @@ public interface MenuService {
     //单层搜索
     List<Menu> getMenu(Menu m);
 
-    List<Menu> getMenuListByUser(ShiroUser user);
+    List<Menu> getMenuListByUser(SysUser user);
 
     Menu saveMenu(Menu menu);
 

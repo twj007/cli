@@ -1,7 +1,10 @@
 # 自定义配置通过配置中心获取并初始化
 server:
   port: 8005
-
+  address: 127.0.0.1
+cas:
+  server:
+    url: http://127.0.0.1:8443/cas
 oauth2:
   server:
     mall:
@@ -12,9 +15,6 @@ oauth2:
     access_token_url: ${oauth2.server.mall.address}/accessToken
     user_info_url: ${oauth2.server.mall.address}/getUserInfo
     redirect_uri: ${oauth2.server.mall.address}/index
-shiro:
-  loginUrl: /login
-
 spring:
   cloud:
     nacos:

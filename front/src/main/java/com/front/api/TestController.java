@@ -2,6 +2,7 @@ package com.front.api;
 
 import com.api.TService;
 import org.apache.dubbo.config.annotation.Reference;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ public class TestController {
     TService testService;
 
     @GetMapping("/test")
+    @PreAuthorize("hasAuthority('read')")
     public String test(){
         return testService.test();
     }

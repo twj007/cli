@@ -33,7 +33,7 @@ public class RpcFilter implements Filter {
             throw new RpcException("invalid attachment!");
         }
         String code = EncryptUtils.AESDecode(AESCode);
-        if(!appCode.equals(code + dateTime)){
+        if(!code.equals(appCode + dateTime)){
             throw new RpcException("invalid app code");
         }
         return invoker.invoke(invocation);

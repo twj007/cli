@@ -4,7 +4,7 @@ import com.backend.BackEndApp;
 import com.backend.service.TestService;
 import com.backend.service.menu.MenuService;
 import com.backend.service.user.UserService;
-import com.common.pojo.ShiroUser;
+import com.common.pojo.SysUser;
 import com.common.pojo.dict.Dict;
 import com.common.pojo.dict.DictDetail;
 import com.common.pojo.role.Role;
@@ -38,7 +38,7 @@ public class TestUserMapper {
     @Test
     public void testMapper(){
 //        testService.test();
-        ShiroUser u = new ShiroUser();
+        SysUser u = new SysUser();
         u.setUsername("jien");
         u.setPassword("123456");
         u.setId(1L);
@@ -70,7 +70,7 @@ public class TestUserMapper {
 
     @Test
     public void testMenuByUser(){
-        ShiroUser user = new ShiroUser();
+        SysUser user = new SysUser();
         user.setId(1L);
         List<Menu> menu = menuService.getMenuListByUser(user);
         System.out.println(menu);
@@ -79,10 +79,10 @@ public class TestUserMapper {
 
     @Test
     public void testTransaction(){
-        ShiroUser user = new ShiroUser();
+        SysUser user = new SysUser();
         user.setUsername("zzz");
         user.setPassword("213456");
-        ShiroUser u = userService.register(user);
+        SysUser u = userService.register(user);
         System.out.println(u);
         Assert.assertNotEquals(null, u);
     }

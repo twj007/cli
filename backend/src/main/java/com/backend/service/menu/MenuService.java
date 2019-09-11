@@ -1,7 +1,7 @@
 package com.backend.service.menu;
 
 import com.backend.dao.menu.IMenuDao;
-import com.common.pojo.ShiroUser;
+import com.common.pojo.SysUser;
 import com.common.pojo.user.Menu;
 import com.common.utils.TreeUtils;
 import org.apache.dubbo.config.annotation.Service;
@@ -40,7 +40,7 @@ public class MenuService implements com.api.menu.MenuService {
     }
 
     @Override
-    public List<Menu> getMenuListByUser(ShiroUser user) {
+    public List<Menu> getMenuListByUser(SysUser user) {
         List<Menu> menus =  menuDao.getMenuListByUser(user.getId());
         //从根节点递归菜单
         menus = TreeUtils.getChildPerms(menus, 0L);

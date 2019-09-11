@@ -14,7 +14,7 @@ import java.util.Set;
  **@Author: twj
  **@Date: 2019/07/15
  **/
-public class ShiroUser implements Serializable {
+public class SysUser implements Serializable {
 
     private Long id;       // 用户id
     @NotNull(message = "用户名不为空")
@@ -29,14 +29,23 @@ public class ShiroUser implements Serializable {
     private Set<String> roles = new HashSet<>();    //用户所有角色值，用于shiro做角色权限的判断
     private Set<String> perms = new HashSet<>();
     private boolean rememberMe;
+    private String status; // 账户状态
 
-    public ShiroUser(String username, String password) {
+    public SysUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
 
 
-    public ShiroUser() {
+    public SysUser() {
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean getRememberMe() {

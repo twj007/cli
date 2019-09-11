@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.backend.dao.user.IUserDao" >
 
-    <resultMap id="user" type="com.common.pojo.ShiroUser">
+    <resultMap id="user" type="com.common.pojo.SysUser">
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="nickname" property="nickname"/>
@@ -18,9 +18,19 @@
         sys_user, sys_role, sys_role_user, sys_premission, sys_role_prem
     </sql>
     <sql id="user_params">
-        `id`, `username`, `nickname`, `password`, `create_date`, `update_date`
+        `id`, `username`, `nickname`, `password`, `create_date`, `update_date`, `status`
     </sql>
-    <select id="login" parameterType="ShiroUser" resultMap="user">
+    <select id="getByUsername" parameterType="java.lang.String" resultMap="user">
+        select      <include refid="user_params"/>
+        from        sys_user
+        where       username = #{username}
+    </select>
+    <select id="getById" parameterType="java.lang.Long" resultMap="user">
+        select      <include refid="user_params"/>
+        from        sys_user
+        where       id=#{id}
+    </select>
+    <select id="login" parameterType="SysUser" resultMap="user">
         select      <include refid="user_params"/>
         from        sys_user
         where       status = '2'
@@ -48,7 +58,7 @@
         on        r.id = ru.role_id and ru.user_id=#{id})
     </select>
 
-    <insert id="register" parameterType="ShiroUser">
+    <insert id="register" parameterType="SysUser">
         <selectKey resultType="java.lang.Long" keyProperty="id" keyColumn="id" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -65,5 +75,6 @@
     <select id="getRecord" parameterType="java.lang.Long" resultType="java.lang.Long">
         select status from ums_role where id=#{_parameter}
     </select>
+
 
 </mapper>

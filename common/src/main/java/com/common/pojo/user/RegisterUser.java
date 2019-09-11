@@ -1,6 +1,6 @@
 package com.common.pojo.user;
 
-import com.common.pojo.ShiroUser;
+import com.common.pojo.SysUser;
 import lombok.*;
 
 /***
@@ -11,7 +11,7 @@ import lombok.*;
  **/
 @Getter
 @Setter
-public class RegisterUser extends ShiroUser {
+public class RegisterUser extends SysUser {
 
     public RegisterUser() {
     }

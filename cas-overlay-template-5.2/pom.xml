@@ -8,6 +8,12 @@
     <packaging>war</packaging>
     <version>1.0</version>
 
+    <parent>
+        <artifactId>cli</artifactId>
+        <groupId>cloud</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <build>
         <plugins>
             <plugin>
@@ -74,30 +80,25 @@
             <type>war</type>
             <scope>runtime</scope>
         </dependency>
-
+        <!-- 使用rest api 验证查询用户数据 -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-rest-authentication</artifactId>
             <version>${cas.version}</version>
         </dependency>
-
+        <!-- 注册自定义服务 -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-json-service-registry</artifactId>
             <version>${cas.version}</version>
         </dependency>
-
+        <!-- 使用redis存储 st -->
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-ticket-registry</artifactId>
             <version>${cas.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-shiro-authentication</artifactId>
-            <version>${cas.version}</version>
-        </dependency>
     </dependencies>
 
 
